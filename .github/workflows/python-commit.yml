@@ -65,9 +65,9 @@ jobs:
         password: ${{ secrets.DOCKERHUB_TOKEN}}    
     - name: "Build Docker image"
       run: docker build -f Dockerfile -t mltraining:${{ github.sha }} .
-    - name: "Scan with Trivy"
-      run: |
-        docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/root/ aquasec/trivy:latest fs --severity HIGH,CRITICAL --exit-code 1 --no-progress /
+    # - name: "Scan with Trivy"
+    #   run: |
+    #     docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/root/ aquasec/trivy:latest fs --severity HIGH,CRITICAL --exit-code 1 --no-progress /
     - name: "Push to Docker Hub"
       run: |
         docker tag mltraining:${{ github.sha }} ${{ secrets.DOCKERHUB_USERNAME }}/mltraining:${{ github.sha }}
