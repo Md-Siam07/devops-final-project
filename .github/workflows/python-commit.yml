@@ -3,10 +3,10 @@ run-name: ${{ github.actor }} made a commit to the Python training directory
   
 on:
   push:
-    branches: [ ftr/* ]
-    paths:
-      - 'training/**'
-      - 'Dockerfile' 
+    branches: [ main ]
+    # paths:
+      # - 'training/**'
+      # - 'Dockerfile' 
 
 jobs:
   pylint:

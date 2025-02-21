@@ -3,10 +3,10 @@ run-name: ${{ github.actor }} made a commit to MLflow files
   
 on:
   push:
-    branches: [ ftr/* ]
-    paths:
-      - 'requirements.txt'
-      - 'mlflow.Dockerfile'   
+    branches: [ main ]
+    # paths:
+      # - 'requirements.txt'
+      # - 'mlflow.Dockerfile'   
 jobs:
   mlflow-build-push:
     name: "Build MLflow Docker image, check for vulneratibilities and push"
