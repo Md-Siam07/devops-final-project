@@ -1,5 +1,5 @@
 name: Terraform commit pipeline
-# run-name: ${{ github.actor }} made a commit to infrastructure
+run-name: ${{ github.actor }} made a commit to infrastructure
 
 on:
   push:
@@ -11,10 +11,9 @@ jobs:
     steps:
       - name: Start Measurement
         uses: green-coding-solutions/eco-ci-energy-estimation@v4
-        id: measurement
+        id: start
         with:
           task: start-measurement
-          cpu-util: true
           
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -24,12 +23,14 @@ jobs:
         with:
           path: "./infrastructure/"
           
-      - name: Stop Measurement
+      - name: Get Measurement
+        id: get
         uses: green-coding-solutions/eco-ci-energy-estimation@v4
         with:
-          task: stop-measurement
+          task: get-measurement
           
       - name: Display Results
+        if: always()
         uses: green-coding-solutions/eco-ci-energy-estimation@v4
         with:
           task: display-results
@@ -40,10 +41,9 @@ jobs:
     steps:
       - name: Start Measurement
         uses: green-coding-solutions/eco-ci-energy-estimation@v4
-        id: measurement
+        id: start
         with:
           task: start-measurement
-          cpu-util: true
           
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -53,12 +53,14 @@ jobs:
         with:
           dir_filter: infrastructure/
           
-      - name: Stop Measurement
+      - name: Get Measurement
+        id: get
         uses: green-coding-solutions/eco-ci-energy-estimation@v4
         with:
-          task: stop-measurement
+          task: get-measurement
           
       - name: Display Results
+        if: always()
         uses: green-coding-solutions/eco-ci-energy-estimation@v4
         with:
           task: display-results
@@ -69,10 +71,9 @@ jobs:
     steps:
       - name: Start Measurement
         uses: green-coding-solutions/eco-ci-energy-estimation@v4
-        id: measurement
+        id: start
         with:
           task: start-measurement
-          cpu-util: true
           
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -82,12 +83,14 @@ jobs:
         with:
           path: "./infrastructure/"
           
-      - name: Stop Measurement
+      - name: Get Measurement
+        id: get
         uses: green-coding-solutions/eco-ci-energy-estimation@v4
         with:
-          task: stop-measurement
+          task: get-measurement
           
       - name: Display Results
+        if: always()
         uses: green-coding-solutions/eco-ci-energy-estimation@v4
         with:
           task: display-results
@@ -98,10 +101,9 @@ jobs:
     steps:
       - name: Start Measurement
         uses: green-coding-solutions/eco-ci-energy-estimation@v4
-        id: measurement
+        id: start
         with:
           task: start-measurement
-          cpu-util: true
           
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -114,12 +116,14 @@ jobs:
           output_format: cli
           output_file_path: console
           
-      - name: Stop Measurement
+      - name: Get Measurement
+        id: get
         uses: green-coding-solutions/eco-ci-energy-estimation@v4
         with:
-          task: stop-measurement
+          task: get-measurement
           
       - name: Display Results
+        if: always()
         uses: green-coding-solutions/eco-ci-energy-estimation@v4
         with:
           task: display-results
