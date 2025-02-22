@@ -12,7 +12,6 @@ jobs:
         id: start-measurement
         uses: green-coding-solutions/eco-ci-energy-estimation@v4
         with:
-          json-output: true
           task: start-measurement
 
       - name: Checkout repo
@@ -23,21 +22,17 @@ jobs:
         with:
           path: ./infrastructure/
 
+      - name: Stop Energy Measurement  # Added stop measurement step
+        id: stop-measurement
+        uses: green-coding-solutions/eco-ci-energy-estimation@v4
+        with:
+          task: stop-measurement
+
       - name: Display Energy Results
         id: final-measurement
         uses: green-coding-solutions/eco-ci-energy-estimation@v4
         with:
-          json-output: true
           task: display-results
-
-      - name: Save Total Energy Consumption Data
-        run: echo '${{ steps.final-measurement.outputs.data-total-json }}' > total_energy_consumption1.json
-
-      - name: Upload Energy Consumption Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: total-energy-consumption1
-          path: total_energy_consumption1.json
 
   lint-code:
     needs: format-code
@@ -47,7 +42,6 @@ jobs:
         id: start-measurement
         uses: green-coding-solutions/eco-ci-energy-estimation@v4
         with:
-          json-output: true
           task: start-measurement
 
       - name: Checkout repo
@@ -58,21 +52,17 @@ jobs:
         with:
           dir_filter: infrastructure/
 
+      - name: Stop Energy Measurement
+        id: stop-measurement
+        uses: green-coding-solutions/eco-ci-energy-estimation@v4
+        with:
+          task: stop-measurement
+
       - name: Display Energy Results
         id: final-measurement
         uses: green-coding-solutions/eco-ci-energy-estimation@v4
         with:
-          json-output: true
           task: display-results
-
-      - name: Save Total Energy Consumption Data
-        run: echo '${{ steps.final-measurement.outputs.data-total-json }}' > total_energy_consumption2.json
-
-      - name: Upload Energy Consumption Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: total-energy-consumption2
-          path: total_energy_consumption2.json
 
   validate:
     needs: lint-code
@@ -82,7 +72,6 @@ jobs:
         id: start-measurement
         uses: green-coding-solutions/eco-ci-energy-estimation@v4
         with:
-          json-output: true
           task: start-measurement
 
       - name: Checkout repo
@@ -93,21 +82,17 @@ jobs:
         with:
           path: ./infrastructure/
 
+      - name: Stop Energy Measurement
+        id: stop-measurement
+        uses: green-coding-solutions/eco-ci-energy-estimation@v4
+        with:
+          task: stop-measurement
+
       - name: Display Energy Results
         id: final-measurement
         uses: green-coding-solutions/eco-ci-energy-estimation@v4
         with:
-          json-output: true
           task: display-results
-
-      - name: Save Total Energy Consumption Data
-        run: echo '${{ steps.final-measurement.outputs.data-total-json }}' > total_energy_consumption3.json
-
-      - name: Upload Energy Consumption Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: total-energy-consumption3
-          path: total_energy_consumption3.json
 
   checkov-scan:
     needs: validate
@@ -117,7 +102,6 @@ jobs:
         id: start-measurement
         uses: green-coding-solutions/eco-ci-energy-estimation@v4
         with:
-          json-output: true
           task: start-measurement
 
       - name: Checkout repo
@@ -131,20 +115,16 @@ jobs:
           output_file_path: console
           output_format: cli
 
+      - name: Stop Energy Measurement
+        id: stop-measurement
+        uses: green-coding-solutions/eco-ci-energy-estimation@v4
+        with:
+          task: stop-measurement
+
       - name: Display Energy Results
         id: final-measurement
         uses: green-coding-solutions/eco-ci-energy-estimation@v4
         with:
-          json-output: true
           task: display-results
-
-      - name: Save Total Energy Consumption Data
-        run: echo '${{ steps.final-measurement.outputs.data-total-json }}' > total_energy_consumption4.json
-
-      - name: Upload Energy Consumption Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: total-energy-consumption4
-          path: total_energy_consumption4.json
 
 run-name: ${{ github.actor }} made a commit to infrastructure
