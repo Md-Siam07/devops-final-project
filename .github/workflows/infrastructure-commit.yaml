@@ -1,54 +1,122 @@
-name: Terraform commit pipeline
-run-name: ${{ github.actor }} made a commit to infrastructure
-
+name: infrastructure-commit.yaml
 on:
   push:
-    # paths: ['infrastructure/**' ]
-    branches: [ main ]
+    branches:
+      - main
 
 jobs:
+  checkov-scan:
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Start Energy Measurement
+        uses: green-coding-solutions/eco-ci-energy-estimation@v4
+        with:
+          json-output: true
+          task: start-measurement
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Check infrastructure code with Checkov
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          check: HIGH, CRITICAL
+          directory: infrastructure/
+          output_file_path: console
+          output_format: cli
+      - id: display-measurement
+        name: Display Energy Results
+        uses: green-coding-solutions/eco-ci-energy-estimation@v4
+        with:
+          json-output: true
+          task: display-results
+      - name: Save Total Energy Consumption Data
+        run: echo '${{ steps.final-measurement.outputs.data-total-json }}' > total_energy_consumption.json
+      - name: Upload Energy Consumption Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: total-energy-consumption4
+          path: total_energy_consumption4.json
   format-code:
     runs-on: ubuntu-latest
     steps:
+      - name: Start Energy Measurement
+        uses: green-coding-solutions/eco-ci-energy-estimation@v4
+        with:
+          json-output: true
+          task: start-measurement
       - name: Checkout repo
         uses: actions/checkout@v4
       - name: Check Terraform formatting
         uses: dflook/terraform-fmt-check@v1
         with:
-          path: "./infrastructure/"
-  
+          path: ./infrastructure/
+      - id: display-measurement
+        name: Display Energy Results
+        uses: green-coding-solutions/eco-ci-energy-estimation@v4
+        with:
+          json-output: true
+          task: display-results
+      - name: Save Total Energy Consumption Data
+        run: echo '${{ steps.final-measurement.outputs.data-total-json }}' > total_energy_consumption.json
+      - name: Upload Energy Consumption Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: total-energy-consumption1
+          path: total_energy_consumption1.json
   lint-code:
-    runs-on: ubuntu-latest
     needs: format-code
+    runs-on: ubuntu-latest
     steps:
+      - name: Start Energy Measurement
+        uses: green-coding-solutions/eco-ci-energy-estimation@v4
+        with:
+          json-output: true
+          task: start-measurement
       - name: Checkout repo
         uses: actions/checkout@v4
       - name: Check linting of Terraform code
         uses: devops-infra/action-tflint@v0.3
         with:
           dir_filter: infrastructure/
-
+      - id: display-measurement
+        name: Display Energy Results
+        uses: green-coding-solutions/eco-ci-energy-estimation@v4
+        with:
+          json-output: true
+          task: display-results
+      - name: Save Total Energy Consumption Data
+        run: echo '${{ steps.final-measurement.outputs.data-total-json }}' > total_energy_consumption.json
+      - name: Upload Energy Consumption Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: total-energy-consumption2
+          path: total_energy_consumption2.json
   validate:
-    runs-on: ubuntu-latest
     needs: lint-code
+    runs-on: ubuntu-latest
     steps:
+      - name: Start Energy Measurement
+        uses: green-coding-solutions/eco-ci-energy-estimation@v4
+        with:
+          json-output: true
+          task: start-measurement
       - name: Checkout repo
         uses: actions/checkout@v4
       - name: Validate Terraform
         uses: dflook/terraform-validate@v1
         with:
-          path: "./infrastructure/"
-
-  checkov-scan:
-    runs-on: ubuntu-latest
-    needs: validate
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-      - name: Check infrastructure code with Checkov
-        uses: bridgecrewio/checkov-action@v12
+          path: ./infrastructure/
+      - id: display-measurement
+        name: Display Energy Results
+        uses: green-coding-solutions/eco-ci-energy-estimation@v4
         with:
-          check: 'HIGH, CRITICAL'
-          directory: infrastructure/
-          output_format: cli
-          output_file_path: console
+          json-output: true
+          task: display-results
+      - name: Save Total Energy Consumption Data
+        run: echo '${{ steps.final-measurement.outputs.data-total-json }}' > total_energy_consumption.json
+      - name: Upload Energy Consumption Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: total-energy-consumption3
+          path: total_energy_consumption3.json
+run-name: ${{ github.actor }} made a commit to infrastructure
